@@ -11,6 +11,9 @@ import { HomeContainer, Product } from '../Styles/Pages/Home';
 import Link from 'next/link';
 import Head from 'next/head';
 import favicon from '../assets/favicon.ico';
+import { CartButton } from '../Components/CartButton';
+import { useCartContext } from '../Hooks/useCartContext';
+import { currencyFormat } from '../Utils/Formatter';
 
 export default function Home({ products }: ProductsProps) {
   const [keenRef] = useKeenSlider({
@@ -19,6 +22,8 @@ export default function Home({ products }: ProductsProps) {
       spacing: 48,
     },
   });
+
+  const { handlerCreateProductList } = useCartContext();
 
   return (
     <>
@@ -44,8 +49,15 @@ export default function Home({ products }: ProductsProps) {
                   alt={''}
                 />
                 <footer>
-                  <strong>{product.name}</strong>
-                  <span>{product.price}</span>
+                  <div>
+                    <strong>{product.name}</strong>
+                    <span>{currencyFormat.format(product.price)}</span>
+                  </div>
+                  <CartButton
+                    onClick={() => handlerCreateProductList(product)}
+                    color={'green'}
+                    size='large'
+                  />
                 </footer>
               </Product>
             </Link>

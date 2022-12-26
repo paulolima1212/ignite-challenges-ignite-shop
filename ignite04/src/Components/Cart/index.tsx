@@ -2,6 +2,7 @@ import { X } from 'phosphor-react';
 import {
   CartClose,
   CartContent,
+  CartFinalization,
   CartProduct,
   CartProductDetails,
   CartProductImage,
@@ -10,12 +11,47 @@ import { CartButton } from '../CartButton';
 
 import * as Dialog from '@radix-ui/react-dialog';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { api } from '../../Libs/axios';
+import { useCartContext } from '../../Hooks/useCartContext';
+import { currencyFormat } from '../../Utils/Formatter';
 
 export default function Cart() {
+  const { productList, handlerDeleteItem } = useCartContext();
+  const { isFallback } = useRouter();
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false);
+
+  if (isFallback) {
+    return <p>Loading...</p>;
+  }
+
+  async function handleBuyProduct() {
+    try {
+      setIsCreatingCheckoutSession(true);
+    } catch (error) {
+      setIsCreatingCheckoutSession(false);
+      alert(error);
+    }
+  }
+
+  const totalItemsInfo = productList.reduce(
+    (acc, product) => {
+      acc.totalValue += product.price;
+
+      return acc;
+    },
+    {
+      totalItems: productList.length,
+      totalValue: 0,
+    }
+  );
+
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <CartButton />
+        <CartButton size='medium' />
       </Dialog.Trigger>
       <Dialog.Portal>
         <CartContent>
@@ -24,22 +60,49 @@ export default function Cart() {
           </CartClose>
           <h2>Shopping bag</h2>
           <section>
-            <CartProduct>
-              <CartProductImage>
-                <Image
-                  src='https://s3-alpha-sig.figma.com/img/387d/13ce/de131bd1ccf9bbe6b2331e88d3df20cd?Expires=1673222400&Signature=ndHdUNbMaqbG4CdUF4ndiDZcnp1copgB6ETmP-zbPbxjET6UbRJ4C5WLunNH5U~2lJTR9R4cmNoalAVAMZjZdT9eegjDSV7pVfuAkirlIZipBHcMZ4Mrn0jmufHd~LmT3MvedL4J7FrFZn-w~809dUhylrkP-2tMPnB41agaO9tQF2QTWhX-fiaY-r0XN5HgRQ3dGnsZcdvW2LJ5gYHaiG-vTVh5Uwtix91Parj4hXn45UrvQPePyHURpojiGqPQ~cT94LHdDwyKqsN2YX4hDBZEkosHzqcXfIrmA0D1p3d0YoAP~tfbFWYN-gmaGpUA8l1QMD91CRaqLfhCPOiURw__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4'
-                  width={100}
-                  height={93}
-                  alt=''
-                />
-              </CartProductImage>
-              <CartProductDetails>
-                <p>Product 1</p>
-                <strong>15.00€</strong>
-                <button>Remove</button>
-              </CartProductDetails>
-            </CartProduct>
+            {productList.map((product) => {
+              console.log(product.price);
+              return (
+                <CartProduct key={product.id}>
+                  <CartProductImage>
+                    <Image
+                      src={product.imageUrl}
+                      width={100}
+                      height={93}
+                      alt=''
+                    />
+                  </CartProductImage>
+                  <CartProductDetails>
+                    <p>{product.name}</p>
+                    <strong>{currencyFormat.format(product.price)}</strong>
+                    <button onClick={() => handlerDeleteItem(product.id)}>
+                      Remove
+                    </button>
+                  </CartProductDetails>
+                </CartProduct>
+              );
+            })}
           </section>
+          <CartFinalization>
+            <div>
+              <span className='quantity'>Quantity</span>
+              <span className='quantity'>
+                {totalItemsInfo.totalItems} items
+              </span>
+            </div>
+            <div>
+              <span className='total'>Total order</span>
+              <span className='total-value'>
+                {currencyFormat.format(totalItemsInfo.totalValue)}
+              </span>
+            </div>
+            <button
+              onClick={handleBuyProduct}
+              disabled={isCreatingCheckoutSession}
+            >
+              Finish order
+            </button>
+          </CartFinalization>
         </CartContent>
       </Dialog.Portal>
     </Dialog.Root>

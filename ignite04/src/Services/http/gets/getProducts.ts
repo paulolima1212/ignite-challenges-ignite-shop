@@ -13,7 +13,7 @@ export async function getProducts() {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
-      price: currencyFormat.format(price.unit_amount! / 100),
+      price: price.unit_amount! / 100,
     };
   });
 
