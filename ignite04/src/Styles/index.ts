@@ -26,6 +26,7 @@ export const {
     fontSizes: {
       'title-m': '2rem',
       'title-l': '3.2rem',
+      'regular-text-xs': '1rem',
       'regular-text-s': '1.6rem',
       'regular-text-m': '1.8rem',
       'regular-text-l': '2rem',
