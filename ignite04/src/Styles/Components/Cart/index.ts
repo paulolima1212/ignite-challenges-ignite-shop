@@ -25,9 +25,11 @@ export const CartContent = styled(Dialog.Content, {
   section: {
     flex: 1,
     marginTop: '4rem',
+    marginBottom: '4rem',
     gap: '3rem',
     display: 'flex',
     flexDirection: 'column',
+    overflow: 'scroll',
   },
 });
 

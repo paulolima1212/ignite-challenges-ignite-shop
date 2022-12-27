@@ -6,6 +6,10 @@ interface CartContextProps {
   productList: ProductProps[];
   handlerCreateProductList: (product: ProductProps) => void;
   handlerDeleteItem: (productID: string) => void;
+  totalItemsInfo: {
+    totalItems: number;
+    totalValue: number;
+  };
 }
 
 export const CartContext = createContext({} as CartContextProps);
@@ -30,9 +34,26 @@ export function CartContextProvider({ children }: { children: ReactNode }) {
     setProductList(newProductList);
   }
 
+  const totalItemsInfo = productList.reduce(
+    (acc, product) => {
+      acc.totalValue += product.price;
+
+      return acc;
+    },
+    {
+      totalItems: productList.length,
+      totalValue: 0,
+    }
+  );
+
   return (
     <CartContext.Provider
-      value={{ productList, handlerCreateProductList, handlerDeleteItem }}
+      value={{
+        productList,
+        totalItemsInfo,
+        handlerCreateProductList,
+        handlerDeleteItem,
+      }}
     >
       {children}
     </CartContext.Provider>

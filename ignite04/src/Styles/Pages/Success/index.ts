@@ -8,6 +8,14 @@ export const SuccessContainer = styled('div', {
   margin: '0 auto',
   height: 656,
 
+  '.image-container': {
+    display: 'flex',
+    width: '100%',
+    margin: '0 auto',
+    justifyContent: 'center',
+    marginLeft: '3rem',
+  },
+
   h1: {
     fontSize: theme.fontSizes['title-l'],
   },
@@ -37,15 +45,16 @@ export const SuccessContainer = styled('div', {
 export const ImageContainer = styled('div', {
   display: 'flex',
   width: '100%',
-  maxWidth: 130,
+  maxWidth: 145,
   height: 145,
   flexDirection: 'column',
   background: 'linear-gradient(180deg, #1ea483 0%, #7465d4 100%)',
-  borderRadius: 8,
+  borderRadius: 999,
   padding: '0.25rem',
   alignItems: 'center',
   justifyContent: 'center',
   marginTop: '4rem',
+  marginLeft: '-6rem',
 
   img: {
     objectFit: 'cover',

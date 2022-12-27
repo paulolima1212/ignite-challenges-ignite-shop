@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { GetStaticProps } from 'next';
 
 import { getProducts } from '../Services/http/gets/getProducts';
-import { ProductsProps } from '../interfaces/product';
+import { ProductProps, ProductsProps } from '../interfaces/product';
 
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
@@ -14,6 +14,7 @@ import favicon from '../assets/favicon.ico';
 import { CartButton } from '../Components/CartButton';
 import { useCartContext } from '../Hooks/useCartContext';
 import { currencyFormat } from '../Utils/Formatter';
+import { MouseEvent } from 'react';
 
 export default function Home({ products }: ProductsProps) {
   const [keenRef] = useKeenSlider({
@@ -24,6 +25,14 @@ export default function Home({ products }: ProductsProps) {
   });
 
   const { handlerCreateProductList } = useCartContext();
+
+  function handleAddToCart(
+    e: MouseEvent<HTMLButtonElement>,
+    product: ProductProps
+  ) {
+    e.preventDefault();
+    handlerCreateProductList(product);
+  }
 
   return (
     <>
@@ -54,7 +63,7 @@ export default function Home({ products }: ProductsProps) {
                     <span>{currencyFormat.format(product.price)}</span>
                   </div>
                   <CartButton
-                    onClick={() => handlerCreateProductList(product)}
+                    onClick={(e) => handleAddToCart(e, product)}
                     color={'green'}
                     size='large'
                   />

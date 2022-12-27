@@ -18,7 +18,7 @@ import { useCartContext } from '../../Hooks/useCartContext';
 import { currencyFormat } from '../../Utils/Formatter';
 
 export default function Cart() {
-  const { productList, handlerDeleteItem } = useCartContext();
+  const { productList, handlerDeleteItem, totalItemsInfo } = useCartContext();
   const { isFallback } = useRouter();
   const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
     useState(false);
@@ -29,24 +29,20 @@ export default function Cart() {
 
   async function handleBuyProduct() {
     try {
+      console.log(productList);
       setIsCreatingCheckoutSession(true);
+      const response = await api.post('', {
+        products: productList,
+      });
+
+      const { checkoutUrl } = await response.data;
+
+      window.location.href = checkoutUrl;
     } catch (error) {
       setIsCreatingCheckoutSession(false);
       alert(error);
     }
   }
-
-  const totalItemsInfo = productList.reduce(
-    (acc, product) => {
-      acc.totalValue += product.price;
-
-      return acc;
-    },
-    {
-      totalItems: productList.length,
-      totalValue: 0,
-    }
-  );
 
   return (
     <Dialog.Root>
@@ -61,7 +57,6 @@ export default function Cart() {
           <h2>Shopping bag</h2>
           <section>
             {productList.map((product) => {
-              console.log(product.price);
               return (
                 <CartProduct key={product.id}>
                   <CartProductImage>
@@ -87,7 +82,9 @@ export default function Cart() {
             <div>
               <span className='quantity'>Quantity</span>
               <span className='quantity'>
-                {totalItemsInfo.totalItems} items
+                {totalItemsInfo.totalItems > 1
+                  ? `${totalItemsInfo.totalItems} items`
+                  : `${totalItemsInfo.totalItems} item`}
               </span>
             </div>
             <div>

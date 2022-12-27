@@ -1,5 +1,6 @@
 interface PurchaseProps {
   name: string;
   product: string;
-  imageProduct: string;
+  imageProduct: string[];
+  quantity: number;
 }

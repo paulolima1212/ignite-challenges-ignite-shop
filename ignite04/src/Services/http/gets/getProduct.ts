@@ -12,7 +12,7 @@ export async function getProduct(productId: string) {
     id: response.id,
     name: response.name,
     imageUrl: response.images[0],
-    price: currencyFormat.format(price.unit_amount! / 100),
+    price: price.unit_amount! / 100,
     description: response.description,
     priceId: price.id,
   };

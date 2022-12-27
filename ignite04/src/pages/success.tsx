@@ -5,15 +5,25 @@ import { GetServerSideProps } from 'next';
 import { getSession } from '../Services/http/gets/getSessionCheckout';
 
 export default function Success({ purchase }: { purchase: PurchaseProps }) {
+  console.log(purchase);
   return (
     <SuccessContainer>
       <h1>Successfully completed purchase</h1>
-      <ImageContainer>
-        <Image src={purchase?.imageProduct} alt='' width={120} height={110} />
-      </ImageContainer>
+      <div className='image-container'>
+        {purchase.imageProduct.map((productImage) => {
+          return (
+            <ImageContainer>
+              <Image src={productImage} alt='' width={120} height={110} />
+            </ImageContainer>
+          );
+        })}
+      </div>
       <p>
-        Wow, <strong>{purchase?.name}</strong>, your{' '}
-        <strong>{purchase?.product}</strong> is coming soon
+        Wow, <strong>{purchase?.name}</strong>, your purchase of{' '}
+        {purchase!.quantity > 0
+          ? `${purchase.quantity} shirts`
+          : `${purchase.quantity} shirt`}{' '}
+        is already on it's way home
       </p>
 
       <Link href={'/'}>Back to Shop</Link>

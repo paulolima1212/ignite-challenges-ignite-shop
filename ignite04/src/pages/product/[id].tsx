@@ -8,8 +8,19 @@ import {
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { getProduct } from '../../Services/http/gets/getProduct';
 import { ProductProps } from '../../interfaces/product';
+import { useCartContext } from '../../Hooks/useCartContext';
+import { useRouter } from 'next/router';
+import { currencyFormat } from '../../Utils/Formatter';
 
 export default function Product({ product }: { product: ProductProps }) {
+  const { handlerCreateProductList } = useCartContext();
+  const router = useRouter();
+
+  function handleAddToCart() {
+    handlerCreateProductList(product);
+    router.push('/');
+  }
+
   return (
     <ProductContainer>
       <ImageContainer>
@@ -17,9 +28,9 @@ export default function Product({ product }: { product: ProductProps }) {
       </ImageContainer>
       <ProductDetailsContainer>
         <h1>{product?.name}</h1>
-        <span>{product?.price}</span>
+        <span>{currencyFormat.format(product?.price)}</span>
         <p>{product?.description}</p>
-        <button>Buy</button>
+        <button onClick={handleAddToCart}>Buy</button>
       </ProductDetailsContainer>
     </ProductContainer>
   );
