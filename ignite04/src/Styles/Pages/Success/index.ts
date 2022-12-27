@@ -55,6 +55,7 @@ export const ImageContainer = styled('div', {
   justifyContent: 'center',
   marginTop: '4rem',
   marginLeft: '-6rem',
+  boxShadow: '0px 0px 60px rgba(0, 0, 0, 0.8)',
 
   img: {
     objectFit: 'cover',

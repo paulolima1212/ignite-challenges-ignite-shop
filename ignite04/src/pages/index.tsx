@@ -15,8 +15,11 @@ import { CartButton } from '../Components/CartButton';
 import { useCartContext } from '../Hooks/useCartContext';
 import { currencyFormat } from '../Utils/Formatter';
 import { MouseEvent } from 'react';
+import { ProductSkeleton } from '../Components/ProductSkeleton';
+import { useRouter } from 'next/router';
 
 export default function Home({ products }: ProductsProps) {
+  const { isFallback } = useRouter();
   const [keenRef] = useKeenSlider({
     slides: {
       perView: 3,
